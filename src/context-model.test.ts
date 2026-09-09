@@ -92,7 +92,7 @@ test("parity: used sums all buckets of the last assistant with output > 0", () =
     const model = createContextModel(fake.api, () => sid, solid);
     assert.equal(model.status(), "ready");
     // 70,000 + 10,000 + 1,000 + 500 + 602 = 82,102; 82,102 / 200,000.
-    assert.equal(model.usageLine(), "82,102 / 200,000 (117,898 left)");
+    assert.equal(model.usageLine(), "82,102 / 200,000");
     assert.equal(model.costText(), "$0.01");
     // 82,102 / 200,000 = 41.051% -> 41.1%, filled = round(0.41051 * 20) = 8.
     assert.equal(model.barLine(), "████████░░░░░░░░░░░░ 41.1%");
@@ -116,7 +116,7 @@ test("last message wins; messages without output > 0 are skipped", () => {
     const model = createContextModel(fake.api, () => sid, solid);
     assert.equal(model.status(), "ready");
     // 80,000 + 2,000 + 100 + 1 + 1 = 82,102 — the zero-output giant is skipped.
-    assert.equal(model.usageLine(), "82,102 / 200,000 (117,898 left)");
+    assert.equal(model.usageLine(), "82,102 / 200,000");
   });
 });
 
@@ -191,7 +191,7 @@ test("session switch: previous session numbers do not leak", async () => {
     const [sessionID, setSessionID] = createSignal(paid);
     const model = createContextModel(fake.api, sessionID, solid);
     assert.equal(model.status(), "ready");
-    assert.equal(model.usageLine(), "82,102 / 200,000 (117,898 left)");
+    assert.equal(model.usageLine(), "82,102 / 200,000");
 
     setSessionID(empty);
     await nextTask();
@@ -201,7 +201,7 @@ test("session switch: previous session numbers do not leak", async () => {
     setSessionID(paid);
     await nextTask();
     assert.equal(model.status(), "ready");
-    assert.equal(model.usageLine(), "82,102 / 200,000 (117,898 left)");
+    assert.equal(model.usageLine(), "82,102 / 200,000");
   });
 });
     const fake = createFakeTuiApi({ sessions: new Map(), providers: [], costs: new Map() });
@@ -224,7 +224,7 @@ test("repeated events are idempotent: same state, same strings", () => {
     fake.emit("session.updated", { sessionID: sid, info: { id: sid } });
     const after = [model.status(), model.barLine(), model.usageLine(), model.costText()];
     assert.deepEqual(after, before);
-    assert.equal(model.usageLine(), "82,102 / 200,000 (117,898 left)");
+    assert.equal(model.usageLine(), "82,102 / 200,000");
   });
 });
 
@@ -275,12 +275,12 @@ test("read failure on a known session preserves the last confirmed numbers", asy
     const initial = storeWith(sid, [msg], 200_000, 0.01);
     const fake = createFakeTuiApi(initial);
     const model = createContextModel(fake.api, () => sid, solid);
-    assert.equal(model.usageLine(), "82,102 / 200,000 (117,898 left)");
+    assert.equal(model.usageLine(), "82,102 / 200,000");
     fake.setStore({ ...initial, sessions: new Map() });
     fake.emit("message.updated", { sessionID: sid, info: msg });
     await nextTask();
     assert.equal(model.status(), "ready");
-    assert.equal(model.usageLine(), "82,102 / 200,000 (117,898 left)");
+    assert.equal(model.usageLine(), "82,102 / 200,000");
   });
 });
 

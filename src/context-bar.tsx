@@ -1,13 +1,12 @@
 /**
- * supercode.context-progress-bar — TUI sidebar section replacing the built-in
- * `internal:sidebar-context` with a progress bar of the same context window.
+ * supercode.context-progress-bar — two-line context-window readout replacing
+ * the built-in `internal:sidebar-context`: bar + percent, then used / limit.
  *
  * Numbers are 1:1 with the hidden section (verified against the 1.18.29
  * binary, same mechanism as 1.18.21): last assistant message with
- * `tokens.output > 0`, `used` against `model.limit.context`, `Cost` from
- * `session.cost`. This file is only the View plus slot registration: it
- * computes no numbers and formats nothing — all logic lives in
- * ./context-model.ts (the tested seam).
+ * `tokens.output > 0`, `used` against `model.limit.context`. This file is
+ * only the View plus slot registration: it computes no numbers and formats
+ * nothing — all logic lives in ./context-model.ts (the tested seam).
  *
  * Hide mechanism (spike, see README): `sidebar_content` renders in `append`
  * mode (host-controlled, no `replace` available to plugins), so the only
@@ -19,17 +18,15 @@
  * disabling the plugin restores the sidebar without manual edits.
  *
  * Colors always come from the live host theme; collapse state is component
- * memory, expanded by default and not persisted (spec: Out of Scope).
+ * Colors always come from the live host theme; no header, no collapse, no
+ * cost row — minimal two-line render per user request.
  */
-/** @jsxImportSource @opentui/solid */
 import { createEffect, createMemo, createSignal, onCleanup, Show, untrack } from "solid-js";
 import type { TuiPlugin, TuiPluginApi, TuiPluginModule } from "@opencode-ai/plugin/tui";
 import {
   CONTEXT_BAR_EMPTY,
   CONTEXT_BAR_ORDER,
-  CONTEXT_BAR_TITLE,
   CONTEXT_BAR_UNAVAILABLE,
-  CONTEXT_COST_LABEL,
   INTERNAL_CONTEXT_SECTION_ID,
   createContextModel,
   type SolidRuntime,
@@ -45,31 +42,18 @@ const solid: SolidRuntime = { createSignal, createMemo, createEffect, onCleanup,
 
 function Section(props: { api: TuiPluginApi; session_id: string }) {
   const theme = () => props.api.theme.current;
-  const [collapsed, setCollapsed] = createSignal(false);
   const model = createContextModel(props.api, () => props.session_id, solid);
 
   return (
     <box>
-      <box flexDirection="row" gap={1} onMouseDown={() => setCollapsed(!collapsed())}>
-        <text fg={theme().text}>{collapsed() ? "▶" : "▼"}</text>
-        <text fg={theme().text}>
-          <b>{CONTEXT_BAR_TITLE}</b>
+      <Show when={model.status() !== "ready"}>
+        <text fg={theme().textMuted}>
+          {model.status() === "empty" ? CONTEXT_BAR_EMPTY : CONTEXT_BAR_UNAVAILABLE}
         </text>
-      </box>
-      <Show when={!collapsed()}>
-        <Show when={model.status() !== "ready"}>
-          <text fg={theme().textMuted}>
-            {model.status() === "empty" ? CONTEXT_BAR_EMPTY : CONTEXT_BAR_UNAVAILABLE}
-          </text>
-        </Show>
-        <Show when={model.status() === "ready"}>
-          <text fg={theme().text}>{model.barLine()}</text>
-          <text fg={theme().textMuted}>{model.usageLine()}</text>
-          <box flexDirection="row" justifyContent="space-between">
-            <text fg={theme().textMuted}>{CONTEXT_COST_LABEL}</text>
-            <text fg={theme().text}>{model.costText()}</text>
-          </box>
-        </Show>
+      </Show>
+      <Show when={model.status() === "ready"}>
+        <text fg={theme().text}>{model.barLine()}</text>
+        <text fg={theme().textMuted}>{model.usageLine()}</text>
       </Show>
     </box>
   );

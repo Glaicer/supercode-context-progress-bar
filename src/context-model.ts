@@ -45,7 +45,7 @@ export interface ContextModel {
   status: () => ContextStatus;
   /** `████████░░░░░░░░░░░░ 41.1%` — ready only, empty string otherwise. */
   barLine: () => string;
-  /** `82,102 / 200,000 (117,898 left)` — ready only, empty otherwise. */
+  /** `82,102 / 200,000` — ready only, empty otherwise. */
   usageLine: () => string;
   /** `$0.01` — ready only, dash otherwise. */
   costText: () => string;
@@ -138,7 +138,7 @@ function buildBar(used: number, limit: number): string {
 }
 
 function buildUsage(used: number, limit: number): string {
-  return `${groupDigits(used)} / ${groupDigits(limit)} (${groupDigits(limit - used)} left)`;
+  return `${groupDigits(used)} / ${groupDigits(limit)}`;
 }
 
 /**
