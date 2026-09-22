@@ -25,6 +25,7 @@ const packed = JSON.parse(
 const pack = Array.isArray(packed) ? packed[0] : packed[manifest.name] ?? Object.values(packed)[0];
 const files = pack.files.map((file) => file.path);
 
+assert.ok(files.includes("dist/index.js"), "tarball must include the server entry");
 assert.ok(files.includes("dist/context-bar.js"), "tarball must include the compiled TUI entry");
 assert.ok(files.includes("dist/context-model.js"), "tarball must include the compiled model");
 assert.ok(!files.some((file) => file.startsWith("src/")), "tarball must not include raw source files");

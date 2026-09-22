@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const dist = resolve(root, "dist");
-const sources = ["context-model.ts", "context-bar.tsx"];
+const sources = ["index.ts", "context-model.ts", "context-bar.tsx"];
 
 function rewriteTypeScriptExtensions() {
   const rewrite = (path) => {

@@ -19,11 +19,16 @@
     "context-window",
     "progress-bar"
   ],
+  "main": "./dist/index.js",
   "exports": {
+    ".": "./dist/index.js",
+    "./server": "./dist/index.js",
     "./tui": "./dist/context-bar.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "index.ts",
+    "tui.ts"
   ],
   "publishConfig": {
     "access": "public"
@@ -36,21 +41,20 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@opencode-ai/plugin": ">=1.18.21",
-    "@opentui/core": ">=0.4.5",
-    "@opentui/solid": ">=0.4.5",
+    "@opencode/plugin": "^2.0.10",
+    "@opentui/core": ">=0.5.10",
+    "@opentui/solid": ">=0.5.10",
     "solid-js": "1.9.12"
   },
   "devDependencies": {
     "@babel/core": "7.28.0",
     "@babel/preset-typescript": "7.27.1",
-    "@opencode-ai/sdk": "1.18.21",
     "@types/node": "24.13.3",
     "babel-preset-solid": "1.9.12",
     "typescript": "5.8.2"
   },
   "engines": {
     "node": ">=24",
-    "opencode": ">=1.18.21"
+    "opencode": ">=2.0.10"
   }
 }
