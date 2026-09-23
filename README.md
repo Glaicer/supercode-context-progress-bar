@@ -11,21 +11,46 @@ Pairs with [`@glaicer/supercode-token-usage-panel`](https://github.com/Glaicer/s
 
 ## Install
 
-Install with the OpenCode CLI — it detects the TUI target and registers the plugin in `tui.json` for you:
+The plugin is built for OpenCode ≥ 2.0.10.
+
+Install with the OpenCode CLI — it installs the package and registers it in the global configuration (`~/.config/opencode/opencode.jsonc`):
 
 ```bash
-opencode plugin @glaicer/supercode-context-progress-bar
+opencode plugin add @glaicer/supercode-context-progress-bar
 ```
 
-- `--global` installs into the global config (`~/.config/opencode`); default is local (`.opencode` in the current project).
-- `--force` replaces an already-installed version.
-- Restart OpenCode after installing.
+The package exposes both a server entry (`.`) and a TUI entry (`./tui`), so the CLI picks the progress bar up automatically — no `cli.json` entry is needed. Restart OpenCode after installing.
 
-Manual install also works: add the package to the `plugin` array in `tui.json` (global `~/.config/opencode/tui.json` or local `<project>/.opencode/tui.json`):
+By default, the progress bar replaces only OpenCode's built-in Context section; the MCP section stays visible. To hide MCP too, pass the TUI plugin option in `~/.config/opencode/cli.json`:
+
+```json
+{
+  "$schema": "https://opencode.ai/v2/cli.json",
+  "plugins": [
+    {
+      "package": "@glaicer/supercode-context-progress-bar",
+      "options": { "hideMcp": true }
+    }
+  ]
+}
+```
+
+Keep the plugin in `opencode.json(c)` when adding this CLI option; `cli.json` supplies the TUI-specific setting.
+
+Manage installed plugins with:
+
+```bash
+opencode plugin list      # what's installed
+opencode plugin update    # update outdated packages
+opencode plugin remove @glaicer/supercode-context-progress-bar
+```
+
+For a project-local install (or to pin a version), add the package to the `plugins` array in `opencode.json(c)` (global `~/.config/opencode/opencode.jsonc`, or local `<project>/opencode.json(c)` / `<project>/.opencode/opencode.json(c)`):
 
 ```jsonc
 {
-  "plugin": ["@glaicer/supercode-context-progress-bar"]
+  "$schema": "https://opencode.ai/config.json",
+  "plugins": ["@glaicer/supercode-context-progress-bar"]
 }
 ```
 

@@ -1,6 +1,6 @@
 /**
  * supercode.context-progress-bar — two-line context-window readout replacing
- * the built-in sidebar content: bar + percent, then used / limit.
+ * the built-in Context section: bar + percent, then used / limit.
  *
  * This file owns only the view and OpenCode v2 slot registration. All values
  * and formatting live in ./context-model.ts.
@@ -42,11 +42,13 @@ function Section(props: { context: Context; session_id: string }) {
 }
 
 export default Plugin.define({
-  id: "supercode.context-progress-bar",
+  id: "opencode.sidebar.context",
   setup(context) {
-    return context.ui.slot({
-      replace: "sidebar.content",
-      render: (input) => <Section context={context} session_id={input.sessionID} />,
-    });
+    const render = (input: { readonly sessionID: string }) => (
+      <Section context={context} session_id={input.sessionID} />
+    );
+    return context.options.hideMcp === true
+      ? context.ui.slot({ replace: "sidebar.content", render })
+      : context.ui.slot({ append: "sidebar.content", render });
   },
 });
