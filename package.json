@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
   "name": "@glaicer/supercode-context-progress-bar",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "OpenCode TUI sidebar section: context-window usage as a progress bar.",
   "type": "module",
   "license": "MIT",
