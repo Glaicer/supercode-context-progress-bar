@@ -42,7 +42,7 @@ function Section(props: { context: Context; session_id: string }) {
 }
 
 export default Plugin.define({
-  id: "opencode.sidebar.context",
+  id: "supercode.context-progress-bar",
   setup(context) {
     const render = (input: { readonly sessionID: string }) => (
       <Section context={context} session_id={input.sessionID} />

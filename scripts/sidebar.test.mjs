@@ -17,11 +17,11 @@ function slotWith(options) {
     }),
     dispose,
   );
-  assert.equal(plugin.id, "opencode.sidebar.context");
+  assert.equal(plugin.id, "supercode.context-progress-bar");
   return claim;
 }
 
-test("replaces the built-in Context contribution without hiding MCP by default", () => {
+test("appends to the sidebar content slot without hiding MCP by default", () => {
   for (const options of [{}, { hideMcp: false }]) {
     const claim = slotWith(options);
     assert.equal(claim.append, "sidebar.content");
